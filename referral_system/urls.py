@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
+router.register(r'user-profiles', views.UserProfileViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

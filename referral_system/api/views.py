@@ -1,14 +1,14 @@
-from .models import CustomUser
+from .models import UserProfile
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from referral_system.api.serializers import UserSerializer
+from referral_system.api.serializers import UserProfileSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserProfileViewSet(viewsets.ModelViewSet):
 
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
     def get_permissions(self):
         if self.action == 'create':
