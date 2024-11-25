@@ -15,11 +15,13 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+    # Allow public access to `create` for user registration
     def get_permissions(self):
         if self.action == 'create':
             return [AllowAny()]
         return [IsAuthenticated()]
 
+    # List of users that registered using current user's referral code
     @action(detail=True, methods=['get'])
     def referees(self, request, pk=None):
         try:

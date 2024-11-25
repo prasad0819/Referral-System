@@ -16,6 +16,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    # The code entered during user registration which must match an existing user's referral code
     referrer_code = serializers.CharField(write_only=True, required=False, allow_blank=True)
     user = CustomUserSerializer()
 
@@ -24,6 +25,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         exclude = []
         read_only_fields = ['created_at', 'referral_code', 'referred_by']
 
+    # Ensures that the referral code entered during user registration is valid.
     def validate_referrer_code(self, value):
         if value:
             if not UserProfile.objects.filter(referral_code=value).exists():
@@ -32,13 +34,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        referrer_code = validated_data.pop('referrer_code', None)
+        # User creation
         user_data = validated_data.pop('user')
-
         user_serializer = CustomUserSerializer(data=user_data)
         user_serializer.is_valid(raise_exception=True)
         user = user_serializer.save()
 
+        # Use `referrer_code` to set `referred_by`
+        referrer_code = validated_data.pop('referrer_code', None)
         if referrer_code:
             referrer = UserProfile.objects.get(referral_code=referrer_code)
             validated_data['referred_by'] = referrer
@@ -47,6 +50,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return user_profile
 
 
+# To view list of users that a user has referred.
 class RefereeSerializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(source='user.email')
@@ -56,6 +60,7 @@ class RefereeSerializer(serializers.ModelSerializer):
         fields = ['full_name', 'email', 'created_at']
 
 
+# Adding User ID, Email fields to Token response
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)

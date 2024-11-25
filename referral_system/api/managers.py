@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 
 
+# CustomUserManager to use email instead of username for User
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, email, password, **extra_fields):

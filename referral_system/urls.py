@@ -27,7 +27,10 @@ router.register(r'user-profiles', views.UserProfileViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
+
+    # Customized Token View to include User ID, Email
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
 ]

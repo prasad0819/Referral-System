@@ -133,6 +133,9 @@ REST_FRAMEWORK = {
     )
 }
 
+# DRF Simple JWT settings
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
+
 SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": True,
 }
