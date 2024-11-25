@@ -3,6 +3,8 @@ from django.db import transaction
 from .models import CustomUser, UserProfile
 from rest_framework import serializers
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,3 +45,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         user_profile = UserProfile.objects.create(user=user, **validated_data)
         return user_profile
+
+
+class RefereeSerializer(serializers.ModelSerializer):
+
+    email = serializers.EmailField(source='user.email')
+
+    class Meta:
+        model = UserProfile
+        fields = ['full_name', 'email', 'created_at']
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        data['id'] = self.user.id
+        data['email'] = self.user.email
+
+        return data

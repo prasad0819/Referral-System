@@ -136,3 +136,4 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": True,
 }
+
